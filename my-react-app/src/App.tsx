@@ -1,35 +1,45 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import Header from './Header'
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [activeSection, setActiveSection] = useState('middle')
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+
+    return (
+        <>
+            <Header title="Léon Brodbeck" />
+            <div className={`container ${activeSection}`}>
+
+
+
+                <div className="section left" onClick={() => setActiveSection('left')}>
+                    <h2>IT Portfolio</h2>
+                    {/* Add your IT portfolio content here */}
+                </div>
+                <div className="section middle" onClick={() => setActiveSection('middle')}>
+
+                    <div className="about-me">
+                        <img className="profile-picture" src="https://avatars.githubusercontent.com/u/36162427?v=4" alt="Léon" />
+                        
+                        <p>Hello, I'm <b>Léon</b></p>
+                        <p>
+                            A full stack developer and visual creator based in <b>Zurich, Switzerland.</b>
+                            <br />
+                            I execute IT and creative projects. 
+                        </p>
+                        <p>Let's grab a coffee & <b>get to work</b> ❗️</p>
+                    </div>
+                </div>
+                <div className="section right" onClick={() => setActiveSection('right')}>
+                    <h2>Photography Portfolio</h2>
+                    {/* Add your photography portfolio content here */}
+                </div>
+            </div>
+        </>
+
+    )
 }
 
 export default App

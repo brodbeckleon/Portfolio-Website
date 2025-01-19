@@ -40,3 +40,70 @@
 .read-the-docs {
   color: #888;
 }
+
+.container {
+  display: flex;
+  width: 300%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.section {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.left {
+  background-color: #f0f0f0;
+}
+
+.middle {
+  background-color: #ffffff;
+}
+
+.right {
+  background-color: #f0f0f0;
+}
+
+.container.left {
+  transform: translateX(0);
+}
+
+.container.middle {
+  transform: translateX(-33.33%);
+}
+
+.container.right {
+  transform: translateX(-66.66%);
+}
+
+body, html {
+  overflow-x: hidden;
+}
+
+h2 {
+  font-size: 2em;
+  font-family: Arial, Helvetica, sans-serif; /* Use font-family with fallbacks */
+  color: #000000; /* Ensure the color is set correctly */
+}
+
+p {
+  font-size: 1em;
+  font-family: Arial, Helvetica, sans-serif ; /* Use font-family with fallbacks */
+  color: #000000; /* Ensure the color is set correctly */
+}
+
+.about-me p {
+  margin: 0;
+  padding: 0.5rem 0;
+}
+
+.profile-picture {
+  border-radius: 0%;
+  width: 30vw;
+  height: 30vw;
+  margin: 0 auto;
+}

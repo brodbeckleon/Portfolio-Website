@@ -1,0 +1,58 @@
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+    padding: 1rem;
+    background-color: #fff;
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+  
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+    position: absolute;
+    left: 1rem;
+  }
+  
+  .icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: #000;
+    text-align: center;
+    flex: 1; /* Ensures it takes up the center space */
+  }
+  
+  .nav {
+    position: absolute;
+    right: 1rem;
+  }
+  
+  .nav-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .nav-link {
+    color: #000;
+    text-decoration: none;
+    font-family: 'Lora', serif;
+  }
+  
+  .nav-link:hover {
+    text-decoration: underline;
+  }
+  

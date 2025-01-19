@@ -19,7 +19,9 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                 <img src="/icons/icon-github.svg" alt="GitHub" className="icon" />
             </a>
       </div>
-      <h1 className="title">{title}</h1>
+        <a href="/" className="title-link">
+            <h1 className="title">{title}</h1>
+        </a>
       <nav className="nav">
         <ul className="nav-list">
           <li><a href="/portfolio" className="nav-link">portfolio</a></li>

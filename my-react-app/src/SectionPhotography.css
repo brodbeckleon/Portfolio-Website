@@ -10,8 +10,8 @@
 }
 
 .slide {
-    max-width: 40vw;
-    max-height: 40vh;
+    max-width: 60vw;
+    max-height: 60vh;
     width: auto;
     height: auto;
     opacity: 0;
@@ -40,12 +40,12 @@
 }
 
 .prev {
-    left: 10px;
+    left: 10vw;
     border-radius: 3px 3px 3px 3px;
 }
 
 .next {
-    right: 10px;
+    right: 10vw;
     border-radius: 3px 3px 3px 3px;
 }
 

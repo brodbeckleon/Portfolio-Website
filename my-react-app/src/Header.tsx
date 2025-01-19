@@ -9,12 +9,15 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
   return (
     <header className="header">
       <div className="social-icons">
-        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-          <img src="/path/to/instagram-icon.png" alt="Instagram" className="icon" />
-        </a>
-        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-          <img src="/path/to/youtube-icon.png" alt="YouTube" className="icon" />
-        </a>
+            <a href="https://www.instagram.com/leon.brodbeck/" target="_blank" rel="noopener noreferrer">
+                <img src="/icons/icon-instagram.svg" alt="Instagram" className="icon" />
+            </a>
+            <a href="https://www.youtube.com/@leon.brodbeck" target="_blank" rel="noopener noreferrer">
+                <img src="/icons/icon-youtube.svg" alt="YouTube" className="icon" />
+            </a>
+            <a href="https://github.com/brodbeckleon" target="_blank" rel="noopener noreferrer">
+                <img src="/icons/icon-github.svg" alt="GitHub" className="icon" />
+            </a>
       </div>
       <h1 className="title">{title}</h1>
       <nav className="nav">

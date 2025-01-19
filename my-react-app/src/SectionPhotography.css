@@ -1,0 +1,54 @@
+/* Add these styles to your existing CSS */
+
+
+.slideshow-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slide {
+    max-width: 40vw;
+    max-height: 40vh;
+    width: auto;
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    position: absolute;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -22px;
+    color: black;
+    background-color: rgba(0,0,0,0);
+    font-weight: bold;
+    font-size: 18px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+}
+
+.prev {
+    left: 10px;
+    border-radius: 3px 3px 3px 3px;
+}
+
+.next {
+    right: 10px;
+    border-radius: 3px 3px 3px 3px;
+}
+
+.section.right .slide {
+    display: block;
+}

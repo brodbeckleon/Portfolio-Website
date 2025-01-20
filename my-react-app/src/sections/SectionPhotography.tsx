@@ -18,18 +18,21 @@ const SectionPhotography = () => {
     }
 
     return (
-        <div className="slideshow-container">
-            <button className="prev" onClick={prevSlide}>&#10094;</button>
-            {slides.map((slide, index) => (
-                <img
-                    key={index}
-                    src={slide}
-                    className={`slide ${index === currentSlide ? 'active' : ''}`}
-                    alt={`Slide ${index + 1}`}
-                />
-            ))}
-            <button className="next" onClick={nextSlide}>&#10095;</button>
-        </div>
+        <>
+
+            <div className="slideshow-container">
+                <button className="prev" onClick={prevSlide}>&#10094;</button>
+                {slides.map((slide, index) => (
+                    <img
+                        key={index}
+                        src={slide}
+                        className={`slide ${index === currentSlide ? 'active' : ''}`}
+                        alt={`Slide ${index + 1}`}
+                    />
+                ))}
+                <button className="next" onClick={nextSlide}>&#10095;</button>
+            </div>
+        </>
     )
 }
 

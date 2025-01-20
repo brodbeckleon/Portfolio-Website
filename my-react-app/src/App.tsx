@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import Header from './Header'
-import SectionPhotography from './SectionPhotography.tsx'
+import Header from './components/Header'
+import SectionPhotography from './sections/SectionPhotography.tsx'
 
 function App() {
     const [activeSection, setActiveSection] = useState('middle')
@@ -24,7 +24,7 @@ function App() {
                 </div>
                 <div className="section middle" onClick={() => setActiveSection('middle')}>
                     <div className="about-me">
-                        <img className="profile-picture" src="https://avatars.githubusercontent.com/u/36162427?v=4" alt="Léon" />
+                        <img className="profile-picture" src="./images/about/about-leon.png" alt="Léon" />
                         <p>
                             Hello, I'm <b>Léon</b>
                         </p>

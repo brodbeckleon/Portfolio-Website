@@ -3,6 +3,7 @@ import './App.css'
 import Header from './components/Header'
 import SectionPhotography from './sections/SectionPhotography.tsx'
 import SectionAbout from './sections/SectionAbout.tsx'
+import ThreeScene from "./three/ThreeScene.tsx";
 
 function App() {
     const [activeSection, setActiveSection] = useState('middle')
@@ -34,7 +35,7 @@ function App() {
             <div className={`container ${activeSection}`}>
                 <div className="section left" onClick={() => setActiveSection('left')}>
                     <h2>IT Portfolio</h2>
-                    {/* Add your IT portfolio content here */}
+                    <ThreeScene />
                 </div>
                 <div className="section middle" onClick={() => setActiveSection('middle')}>
                     <SectionAbout />

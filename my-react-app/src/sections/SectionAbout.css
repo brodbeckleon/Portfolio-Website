@@ -1,0 +1,12 @@
+.about-me p {
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+.profile-picture {
+    border-radius: 0%;
+    width: 23vw;
+    height: auto;
+    margin: 0 auto;
+    padding-top: 10vh;
+}

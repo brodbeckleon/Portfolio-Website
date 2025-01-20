@@ -2,13 +2,23 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 )
 
 func main() {
 	http.HandleFunc("/api/slides", func(w http.ResponseWriter, r *http.Request) {
-		directoryPath := "./../../../my-react-app/public/images/photography-portfolio"
+
+		currentDir, err := os.Getwd()
+		if err != nil {
+			http.Error(w, "Unable to get current directory", http.StatusInternalServerError)
+			return
+		}
+		fmt.Println("Current directory: ", currentDir)
+
+		directoryPath := currentDir + "/../../../my-react-app/public/images/photography-portfolio"
+		fmt.Println("Current directory: ", directoryPath)
 		files, err := os.ReadDir(directoryPath)
 		if err != nil {
 			http.Error(w, "Unable to scan directory", http.StatusInternalServerError)

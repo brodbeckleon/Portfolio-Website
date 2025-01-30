@@ -3,7 +3,7 @@ import './SectionAbout.css';
 const SectionAbout = () => {
     return <>
         <div className="about-me">
-            <img className="profile-picture" src="images/about/about-leon.png" alt="Léon" />
+            <img className="profile-picture" src="images/about-leon.png" alt="Léon" />
             <p>
                 Hello, I'm <b>Léon</b>
             </p>

@@ -19,8 +19,8 @@ func main() {
 func switchHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(time.ANSIC, r.URL.Path)
 	switch {
-	case strings.HasSuffix(r.URL.Path, ".js"):
-		serveJavaScript(w, r, r.URL.Path)
+	case strings.HasSuffix(r.URL.Path, ".tsx"):
+		serveTypeScript(w, r, r.URL.Path)
 	case r.URL.Path == "/api/slides":
 		slidesHandler(w, r)
 	case r.URL.Path == "/":
@@ -32,16 +32,16 @@ func switchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func serveJavaScript(w http.ResponseWriter, r *http.Request, jsFileName string) {
-	jsFilePath := filepath.Join("path/to/your/js/files", jsFileName)
+func serveTypeScript(w http.ResponseWriter, r *http.Request, tsxFileName string) {
+	tsxFilePath := filepath.Join("front-end/src", tsxFileName)
 
 	// Check if file exists to avoid 404
-	if _, err := os.Stat(jsFilePath); os.IsNotExist(err) {
+	if _, err := os.Stat(tsxFilePath); os.IsNotExist(err) {
 		http.Error(w, "File not found", http.StatusNotFound)
 		return
 	}
 
-	// Set the correct MIME type for JavaScript files
-	w.Header().Set("Content-Type", "application/javascript")
-	http.ServeFile(w, r, jsFilePath)
+	// Set the correct MIME type for TypeScript files
+	w.Header().Set("Content-Type", "application/typescript")
+	http.ServeFile(w, r, tsxFilePath)
 }

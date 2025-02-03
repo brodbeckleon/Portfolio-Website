@@ -1,4 +1,4 @@
-package photography_service
+package handlers
 
 import (
 	"crypto/rand"

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import './App.css'
+import './Home.css'
 import Header from './components/Header'
 import SectionPhotography from './sections/SectionPhotography.tsx'
 import SectionAbout from './sections/SectionAbout.tsx'
 import ThreeScene from "./three/ThreeScene.tsx";
 
-function App() {
+function Home() {
     const [activeSection, setActiveSection] = useState('middle')
 
     const socials = [
@@ -49,4 +49,4 @@ function App() {
     )
 }
 
-export default App
+export default Home

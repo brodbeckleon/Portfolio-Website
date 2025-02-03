@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
@@ -12,7 +12,7 @@ import (
 const imagesFolder = "./../../../images"
 const defaultFolder = "./error"
 
-func slidesHandler(w http.ResponseWriter, r *http.Request) {
+func SlidesHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return

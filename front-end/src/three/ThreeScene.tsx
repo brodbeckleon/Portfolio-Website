@@ -10,7 +10,7 @@ const ThreeScene: React.FC = () => {
 
         // Set up the scene, camera, and renderer
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, mount.offsetWidth / mount.offsetHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(24, mount.offsetWidth / mount.offsetHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer();
         renderer.setSize(mount.offsetWidth, mount.offsetHeight);
         mount.appendChild(renderer.domElement);

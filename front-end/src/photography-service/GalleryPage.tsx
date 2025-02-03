@@ -13,7 +13,7 @@ const Gallery = () => {
         <div>
             <h2>Project Gallery</h2>
             {photos.map((photo, index) => (
-                <img key={index} src={photo.url} alt="Client Photo" />
+                <img key={index} src={photo} alt="Client Photo" />
             ))}
         </div>
     );

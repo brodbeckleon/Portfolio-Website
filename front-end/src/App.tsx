@@ -32,6 +32,7 @@ function App() {
     return (
         <>
             <Header title="Léon Brodbeck" socials={socials} links={links} />
+
             <div className={`container ${activeSection}`}>
                 <div className="section left" onClick={() => setActiveSection('left')}>
                     <h2>IT Portfolio</h2>

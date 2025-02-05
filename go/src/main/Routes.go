@@ -20,24 +20,16 @@ func registerRoutes(mux *http.ServeMux) {
 		mux.Handle("/", fileServer)
 	}
 
-	mux.HandleFunc("/api/slides", slidesHandler)
-	mux.HandleFunc("/api/login", loginHandler)
-	mux.HandleFunc("/api/fetchProjects", fetchProjects)
-	mux.HandleFunc("/api/addProject", addProject)
-}
-
-func slidesHandler(w http.ResponseWriter, r *http.Request) {
-	handlers.SlidesHandler(w, r)
-}
-
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-	handlers.LoginHandler(w, r)
-}
-
-func fetchProjects(w http.ResponseWriter, r *http.Request) {
-	handlers.FetchProjects(w, r)
-}
-
-func addProject(w http.ResponseWriter, r *http.Request) {
-	handlers.AddProject(w, r)
+	mux.HandleFunc("/api/slides", handlers.SlidesHandler)
+	mux.HandleFunc("/api/image", handlers.ServeImage)
+	//TODO
+	mux.HandleFunc("/api/zip", handlers.ServeZipFile)
+	mux.HandleFunc("/api/login", handlers.LoginHandler)
+	mux.HandleFunc("/api/fetchProjects", handlers.FetchProjects)
+	mux.HandleFunc("/api/fetchProject", handlers.FetchProject)
+	mux.HandleFunc("/api/addProject", handlers.AddProject)
+	//TODO
+	mux.HandleFunc("/api/deleteProject", handlers.DeleteProject)
+	//TODO
+	mux.HandleFunc("/api/updateProject", handlers.UpdateProject)
 }

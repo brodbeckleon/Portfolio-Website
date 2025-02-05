@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -20,13 +20,13 @@ func SlidesHandler(w http.ResponseWriter, r *http.Request) {
 	// Otherwise, get all images from a specific folder:
 	folder := r.URL.Query().Get("folder")
 	if folder == "" {
-		fmt.Println("No folder specified, using default")
+		log.Println("No folder specified, using default")
 		folder = filepath.Join(ImagesFolder, defaultFolder)
 	}
 
 	folder = filepath.Join(ImagesFolder, folder)
 
-	fmt.Println("Fetching slides from", folder)
+	log.Println("Fetching slides from", folder)
 	slides, err := fetchSlidesFromFolder(folder)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -34,7 +34,7 @@ func SlidesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Return the list of image paths as JSON
-	fmt.Println("Returning slides", slides)
+	log.Println("Returning slides", slides)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(slides)
 }
@@ -57,13 +57,13 @@ func fetchSlidesFromFolder(folderPath string) ([]string, error) {
 			}
 		}
 	}
-	fmt.Println("Slides fetched", slides)
+	log.Println("Slides fetched", slides)
 	return slides, nil
 }
 
 func ServeImage(w http.ResponseWriter, r *http.Request) {
 	imageName := r.URL.Query().Get("image")
-	fmt.Println("Serving image", imageName)
+	log.Println("Serving image", imageName)
 
 	imagePath := filepath.Join(ImagesFolder, imageName)
 
@@ -74,5 +74,5 @@ func ServeImage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.ServeFile(w, r, imagePath)
-	fmt.Println("Image Served", imagePath)
+	log.Println("Image Served", imagePath)
 }

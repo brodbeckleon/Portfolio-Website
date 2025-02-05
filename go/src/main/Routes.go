@@ -23,7 +23,7 @@ func registerRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api/slides", handlers.SlidesHandler)
 	mux.HandleFunc("/api/image", handlers.ServeImage)
 	//TODO
-	mux.HandleFunc("/api/zip", handlers.ServeZipFile)
+	mux.HandleFunc("/api/downloadZip", handlers.ServeZipFile)
 	mux.HandleFunc("/api/login", handlers.LoginHandler)
 	mux.HandleFunc("/api/fetchProjects", handlers.FetchProjects)
 	mux.HandleFunc("/api/fetchProject", handlers.FetchProject)

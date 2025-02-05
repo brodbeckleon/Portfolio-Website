@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 )
 
 // HomePageHandler handles the root path `/`
 func HomePageHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Welcome to the homepage!")
+	log.Println(w, "Welcome to the homepage!")
 }

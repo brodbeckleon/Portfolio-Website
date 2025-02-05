@@ -48,7 +48,21 @@ func getProjects() []Project {
 		}
 	}
 
+	log.Println("Projects found", projects)
 	return projects
+}
+
+func getProject(id uint) Project {
+	projects := getProjects()
+
+	for _, project := range projects {
+		if project.ID == id {
+			log.Println("Project found", project)
+			return project
+		}
+	}
+	log.Println("Project not found")
+	return Project{}
 }
 
 func getHighestID() uint {
@@ -166,4 +180,46 @@ func AddProject(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	log.Println(w, "Project added successfully")
+}
+
+func DeleteProject(w http.ResponseWriter, r *http.Request) {
+	//TODO: Implement
+}
+
+func UpdateProject(w http.ResponseWriter, r *http.Request) {
+	//TODO: Implement
+}
+
+func FetchProject(w http.ResponseWriter, r *http.Request) {
+	projectId := r.URL.Query().Get("projectId")
+	if projectId == "" {
+		http.Error(w, "Project ID is required", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(projectId)
+	if err != nil {
+		http.Error(w, "Invalid project ID", http.StatusBadRequest)
+		return
+	}
+
+	var project Project = getProject(uint(id))
+	projectFilePath := filepath.Join(galleryFolder, projectId+"_"+project.ProjectName, "project.json")
+
+	file, err := os.Open(projectFilePath)
+	if err != nil {
+		http.Error(w, "Project not found", http.StatusNotFound)
+		return
+	}
+	defer file.Close()
+	if err := json.NewDecoder(file).Decode(&project); err != nil {
+		http.Error(w, "Error decoding project file", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(project); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	log.Println("Project fetched", project)
 }

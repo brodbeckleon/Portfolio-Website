@@ -20,12 +20,10 @@ func registerRoutes(mux *http.ServeMux) {
 		mux.Handle("/", fileServer)
 	}
 
-	// 2) Register your API routes
 	mux.HandleFunc("/api/slides", slidesHandler)
 	mux.HandleFunc("/api/login", loginHandler)
 	mux.HandleFunc("/api/fetchProjects", fetchProjects)
 	mux.HandleFunc("/api/addProject", addProject)
-	// etc.
 }
 
 func slidesHandler(w http.ResponseWriter, r *http.Request) {

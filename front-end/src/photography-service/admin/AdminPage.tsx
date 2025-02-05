@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface Project {
     id: string;
-    name: string;
+    projectName: string;
     images: string[];
 }
 
@@ -37,7 +37,7 @@ const AdminPage: React.FC = () => {
             console.error('Error fetching projects:', err);
             setProjects([]);
         }
-    };
+    }
 
     useEffect(() => {
         fetchProjects();
@@ -72,9 +72,7 @@ const AdminPage: React.FC = () => {
         }
 
         const token = localStorage.getItem('token');
-        if (!token) {
-            return;
-        }
+        if (!token) return;
 
         const formData = new FormData();
         formData.append('name', projectName);
@@ -109,7 +107,7 @@ const AdminPage: React.FC = () => {
 
     const openProject = (projectId: string) => {
         navigate(`/gallery/${projectId}`);
-    }
+    };
 
     return (
         <div style={{ padding: '20px' }}>
@@ -120,21 +118,43 @@ const AdminPage: React.FC = () => {
 
             <section>
                 <h2>Existing Projects</h2>
-                {projects.map((project) => (
-                    <div key={project.id} style={{ marginBottom: '20px' }}>
-                        <h3>{project.name}</h3>
-                        <div style={{ display: 'flex', gap: '10px' }}>
-                            {project.images.map((imgUrl, index) => (
+                {projects.map((project) => {
+                    const firstImage =
+                        project.images && project.images.length > 0
+                            ? project.images[0]
+                            : null;
+
+                    const imageUrl = firstImage
+                        ? `/api/slides?image=galleries/${project.projectName}/${firstImage}`
+                        : '';
+
+                    return (
+                        <div
+                            key={project.id}
+                            style={{
+                                marginBottom: '20px',
+                                cursor: 'pointer',
+                                border: '1px solid #ccc',
+                                padding: '10px',
+                                width: '200px'
+                            }}
+                            onDoubleClick={() => openProject(project.id)}
+                        >
+                            <h3>{project.projectName}</h3>
+                            {firstImage && (
                                 <img
-                                    key={index}
-                                    src={imgUrl}
-                                    alt={`${project.name}-${index}`}
-                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                    src={imageUrl}
+                                    alt={`${project.projectName} thumbnail`}
+                                    style={{
+                                        width: '100px',
+                                        height: '100px',
+                                        objectFit: 'cover',
+                                    }}
                                 />
-                            ))}
+                            )}
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </section>
 
             <section style={{ marginTop: '40px' }}>

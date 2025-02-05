@@ -6,6 +6,7 @@ import AdminPage from "./photography-service/admin/AdminPage.tsx";
 import LoginPage from "./photography-service/admin/LoginPage.tsx";
 import PrivateRoute from "./photography-service/admin/PrivateRoute.tsx";
 import Home from "./Home.tsx";
+import GalleryPage from "./photography-service/client/GalleryPage.tsx";
 
 export default function App() {
     return (
@@ -13,6 +14,7 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<Home/>} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/gallery/:projectId" element={<GalleryPage />} />
 
                 <Route
                     path="/admin"

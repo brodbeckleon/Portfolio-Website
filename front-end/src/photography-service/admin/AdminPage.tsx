@@ -14,28 +14,28 @@ const AdminPage: React.FC = () => {
     const navigate = useNavigate();
 
     // Fetch existing projects from the backend
-    const fetchProjects = async () => {
+    async function fetchProjects() {
         try {
             const token = localStorage.getItem('token');
             const response = await fetch('http://localhost:3000/api/fetchProjects', {
-                headers: {
-                    Authorization: `Bearer ${token}`, // If your Go backend uses Bearer token
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
             if (response.ok) {
                 const data = await response.json();
-                setProjects(data);
+                if (Array.isArray(data)) {
+                    setProjects(data);
+                } else {
+                    setProjects([]);
+                }
             } else {
                 if (response.status === 401) {
-                    // Unauthorized, so remove the token and redirect to /login
                     localStorage.removeItem('token');
                     navigate('/login');
-                } else {
-                    console.error('Failed to fetch projects');
                 }
             }
         } catch (err) {
             console.error('Error fetching projects:', err);
+            setProjects([]);
         }
     };
 

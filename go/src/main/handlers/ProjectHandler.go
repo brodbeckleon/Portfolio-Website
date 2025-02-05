@@ -21,6 +21,7 @@ var projects []Project
 var nextID uint = 1
 
 func FetchProjects(w http.ResponseWriter, r *http.Request) {
+
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(projects); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

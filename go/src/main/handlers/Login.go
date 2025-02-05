@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -22,7 +22,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("LoginHandler called")
+	log.Println("LoginHandler called")
 
 	if r.Method == http.MethodPost {
 		var creds Credentials
@@ -44,7 +44,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 		// Possibly serve a login form or similar
-		fmt.Fprintf(w, "Provide credentials via POST.")
+		log.Println(w, "Provide credentials via POST.")
 		return
 	}
 

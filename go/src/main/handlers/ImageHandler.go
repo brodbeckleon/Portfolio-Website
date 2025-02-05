@@ -9,7 +9,6 @@ import (
 	"strings"
 )
 
-const imagesFolder = "./../../../images"
 const defaultFolder = "./error"
 
 func SlidesHandler(w http.ResponseWriter, r *http.Request) {
@@ -29,10 +28,10 @@ func SlidesHandler(w http.ResponseWriter, r *http.Request) {
 	folder := r.URL.Query().Get("folder")
 	if folder == "" {
 		fmt.Println("No folder specified, using default")
-		folder = filepath.Join(imagesFolder, defaultFolder)
+		folder = filepath.Join(ImagesFolder, defaultFolder)
 	}
 
-	folder = filepath.Join(imagesFolder, folder)
+	folder = filepath.Join(ImagesFolder, folder)
 
 	fmt.Println("Fetching slides from", folder)
 	slides, err := fetchSlidesFromFolder(folder)
@@ -72,7 +71,7 @@ func fetchSlidesFromFolder(folderPath string) ([]string, error) {
 // serveImage uses http.ServeFile to directly send the file content to the client.
 func serveImage(w http.ResponseWriter, r *http.Request, imageName string) {
 	// If your images are in a specific folder, prepend that folder:
-	imagePath := filepath.Join(imagesFolder, imageName)
+	imagePath := filepath.Join(ImagesFolder, imageName)
 
 	// Check if file exists to avoid 404
 	if _, err := os.Stat(imagePath); os.IsNotExist(err) {

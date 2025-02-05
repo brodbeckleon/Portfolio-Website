@@ -2,13 +2,16 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 )
+
+const galleryFolder = ImagesFolder + "/galleries"
 
 type Project struct {
 	ID          uint     `json:"id"`
@@ -17,18 +20,82 @@ type Project struct {
 	Images      []string `json:"images"`
 }
 
-var projects []Project
-var nextID uint = 1
+func getProjects() []Project {
+	entries, err := os.ReadDir(galleryFolder)
+	if err != nil {
+		log.Println("Error reading directory:", err)
+		return []Project{}
+	}
+
+	var projects []Project
+	for _, entry := range entries {
+		if entry.IsDir() {
+			projectFilePath := filepath.Join(galleryFolder, entry.Name(), "project.json")
+			file, err := os.Open(projectFilePath)
+			if err != nil {
+				log.Println("Error opening project file:", err)
+				continue
+			}
+			defer file.Close()
+
+			var project Project
+			if err := json.NewDecoder(file).Decode(&project); err != nil {
+				log.Println("Error decoding project file:", err)
+				continue
+			}
+
+			projects = append(projects, project)
+		}
+	}
+
+	return projects
+}
+
+func getHighestID() uint {
+	entries, err := os.ReadDir(galleryFolder)
+	if err != nil {
+		log.Println("Error reading directory:", err)
+		return 0
+	}
+
+	maxNumber := 0
+	for _, entry := range entries {
+		if entry.IsDir() {
+			name := entry.Name()
+			log.Println("Processing directory:", name)
+			var id int
+			if idx := strings.Index(name, "_"); idx != -1 {
+				id, _ = strconv.Atoi(name[:idx])
+			} else {
+				id, err = strconv.Atoi(name)
+				if err != nil {
+					log.Println("Error converting directory name to number:", err)
+					continue
+				}
+			}
+
+			log.Println("Extracted ID:", id)
+			if id > maxNumber {
+				maxNumber = id
+			}
+		}
+	}
+
+	log.Println("Highest ID found:", maxNumber)
+	return uint(maxNumber) + 1
+}
 
 func FetchProjects(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(projects); err != nil {
+	if err := json.NewEncoder(w).Encode(getProjects()); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func AddProject(w http.ResponseWriter, r *http.Request) {
+	var nextID uint = getHighestID()
+
 	if err := r.ParseMultipartForm(10 << 20); err != nil {
 		http.Error(w, "Unable to parse form", http.StatusBadRequest)
 		return
@@ -54,7 +121,7 @@ func AddProject(w http.ResponseWriter, r *http.Request) {
 	}
 
 	images := r.MultipartForm.File["images"]
-	projectDir := filepath.Join("images", strconv.Itoa(int(project.ID)))
+	projectDir := filepath.Join(galleryFolder, strconv.Itoa(int(project.ID))+"_"+project.ProjectName)
 	if err := os.MkdirAll(projectDir, os.ModePerm); err != nil {
 		http.Error(w, "Unable to create project directory", http.StatusInternalServerError)
 		return
@@ -97,9 +164,6 @@ func AddProject(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	projects = append(projects, project)
-	nextID++
-
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprint(w, "Project added successfully")
+	log.Println(w, "Project added successfully")
 }

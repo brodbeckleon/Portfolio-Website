@@ -17,13 +17,6 @@ func SlidesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// If ?image=something is set, serve that image directly:
-	if imageName := r.URL.Query().Get("image"); imageName != "" {
-		fmt.Println("Serving image", imageName)
-		serveImage(w, r, imageName)
-		return
-	}
-
 	// Otherwise, get all images from a specific folder:
 	folder := r.URL.Query().Get("folder")
 	if folder == "" {
@@ -68,9 +61,10 @@ func fetchSlidesFromFolder(folderPath string) ([]string, error) {
 	return slides, nil
 }
 
-// serveImage uses http.ServeFile to directly send the file content to the client.
-func serveImage(w http.ResponseWriter, r *http.Request, imageName string) {
-	// If your images are in a specific folder, prepend that folder:
+func ServeImage(w http.ResponseWriter, r *http.Request) {
+	imageName := r.URL.Query().Get("image")
+	fmt.Println("Serving image", imageName)
+
 	imagePath := filepath.Join(ImagesFolder, imageName)
 
 	// Check if file exists to avoid 404
@@ -79,7 +73,6 @@ func serveImage(w http.ResponseWriter, r *http.Request, imageName string) {
 		return
 	}
 
-	// Serve the actual file
 	http.ServeFile(w, r, imagePath)
 	fmt.Println("Image Served", imagePath)
 }

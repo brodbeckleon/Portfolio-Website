@@ -125,7 +125,7 @@ const AdminPage: React.FC = () => {
                             : null;
 
                     const imageUrl = firstImage
-                        ? `/api/slides?image=galleries/${project.projectName}/${firstImage}`
+                        ? `/api/image?image=galleries/${project.projectName}/${firstImage}`
                         : '';
 
                     return (

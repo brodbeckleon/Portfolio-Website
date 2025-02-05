@@ -38,7 +38,7 @@ const SectionPhotography = () => {
         {slides.map((slideSrc, index) => (
             <img
               key={index}
-              src={`/api/slides?image=photography-portfolio/${slideSrc}`}
+              src={`/api/image?image=photography-portfolio/${slideSrc}`}
               alt={`Slide ${index}`}
               className={`slide ${index === currentSlide ? 'active' : ''}`}
             />

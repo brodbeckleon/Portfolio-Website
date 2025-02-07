@@ -163,7 +163,9 @@ func AddProject(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		imageName := filepath.Join(strconv.Itoa(int(project.ID))+"_"+project.ProjectName, fileHeader.Filename)
+		ext := filepath.Ext(fileHeader.Filename)
+		nameWithoutExt := strings.TrimSuffix(fileHeader.Filename, ext)
+		imageName := filepath.Join(strconv.Itoa(int(project.ID))+"_"+project.ProjectName, nameWithoutExt)
 		project.Images = append(project.Images, imageName)
 	}
 

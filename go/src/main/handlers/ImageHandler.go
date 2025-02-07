@@ -63,6 +63,11 @@ func fetchSlidesFromFolder(folderPath string) ([]string, error) {
 
 func ServeImage(w http.ResponseWriter, r *http.Request) {
 	imageName := r.URL.Query().Get("image")
+
+	if !strings.Contains(imageName, "jpg") {
+		imageName += ".jpg"
+	}
+
 	log.Println("Serving image", imageName)
 
 	imagePath := filepath.Join(ImagesFolder, imageName)

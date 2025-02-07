@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+import './GalleryPage.css';
 
 interface Project {
     id: number;
@@ -8,7 +9,7 @@ interface Project {
 }
 
 const GalleryPage: React.FC = () => {
-    const { projectId } = useParams();
+    const {projectId} = useParams();
     const [project, setProject] = useState<Project | null>(null);
     const [visibleImages, setVisibleImages] = useState<string[]>([]);
     const [page, setPage] = useState<number>(0);
@@ -99,7 +100,7 @@ const GalleryPage: React.FC = () => {
     }, [hasMore, loading]);
 
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('scroll', handleScroll, {passive: true});
         return () => window.removeEventListener('scroll', handleScroll);
     }, [handleScroll]);
 
@@ -126,31 +127,34 @@ const GalleryPage: React.FC = () => {
     };
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div className="gallery-container">
             {!project ? (
                 <p>⏳ Loading project data...</p>
             ) : (
                 <>
-                    <h2>📸 Gallery: {project.projectName}</h2>
-                    <button onClick={handleDownloadZip}>⬇️ Download All as ZIP</button>
+                    <h2 className="gallery-header">📸 Gallery: {project.projectName}</h2>
+                    <button className="download-button" onClick={handleDownloadZip}>
+                        ⬇️ Download All as ZIP
+                    </button>
 
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '20px' }}>
-                        {visibleImages.length === 0 ? (
-                            <p>🚫 No images available.</p>
-                        ) : (
-                            visibleImages.map((imgPath, idx) => {
-                                console.log("🔍 Image path:", imgPath);
-                                const imageUrl = `/api/image?image=galleries/${imgPath}`;
-                                return (
-                                    <img
-                                        key={idx}
-                                        src={imageUrl}
-                                        alt={`Project ${project.projectName} - ${idx}`}
-                                        style={{ width: '250px', objectFit: 'cover' }}
-                                    />
-                                );
-                            })
-                        )}
+                    <div className="row">
+                        {[0, 1, 2, 3].map((colIndex) => (
+                            <div className="column" key={colIndex}>
+                                {visibleImages
+                                    .filter((_, idx) => idx % 4 === colIndex)
+                                    .map((imgPath, idx) => {
+                                        const imageUrl = `/api/image?image=galleries/${imgPath}`;
+                                        return (
+                                            <img
+                                                key={idx}
+                                                src={imageUrl}
+                                                alt={`Project ${project.projectName} - ${imgPath}`}
+                                                className="gallery-image"
+                                            />
+                                        );
+                                    })}
+                            </div>
+                        ))}
                     </div>
 
                     {loading && <p>⏳ Loading images...</p>}

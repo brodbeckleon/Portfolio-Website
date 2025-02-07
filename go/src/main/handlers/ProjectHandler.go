@@ -14,11 +14,29 @@ import (
 const galleryFolder = "/galleries"
 const galleryPath = ImagesFolder + galleryFolder
 
+// Project is used for internal storage (and is written to disk).
 type Project struct {
 	ID          uint     `json:"id"`
 	ProjectName string   `json:"projectName"`
 	Password    string   `json:"password"`
 	Images      []string `json:"images"`
+}
+
+// ProjectResponse is used when sending project data over HTTP.
+// It intentionally excludes the password field.
+type ProjectResponse struct {
+	ID          uint     `json:"id"`
+	ProjectName string   `json:"projectName"`
+	Images      []string `json:"images"`
+}
+
+// stripPassword converts a Project to a ProjectResponse.
+func stripPassword(p Project) ProjectResponse {
+	return ProjectResponse{
+		ID:          p.ID,
+		ProjectName: p.ProjectName,
+		Images:      p.Images,
+	}
 }
 
 func getProjects() []Project {
@@ -37,6 +55,7 @@ func getProjects() []Project {
 				log.Println("Error opening project file:", err)
 				continue
 			}
+			// It is safe to defer here since we expect a small number of directories.
 			defer file.Close()
 
 			var project Project
@@ -101,9 +120,14 @@ func getHighestID() uint {
 }
 
 func FetchProjects(w http.ResponseWriter, r *http.Request) {
+	projects := getProjects()
+	var responses []ProjectResponse
+	for _, p := range projects {
+		responses = append(responses, stripPassword(p))
+	}
 
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(getProjects()); err != nil {
+	if err := json.NewEncoder(w).Encode(responses); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -177,13 +201,14 @@ func AddProject(w http.ResponseWriter, r *http.Request) {
 	}
 	defer projectFile.Close()
 
+	// Save the full project (including password) to disk.
 	if err := json.NewEncoder(projectFile).Encode(project); err != nil {
 		http.Error(w, "Unable to save project file", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	log.Println(w, "Project added successfully")
+	log.Println("Project added successfully")
 }
 
 func DeleteProject(w http.ResponseWriter, r *http.Request) {
@@ -207,6 +232,7 @@ func FetchProject(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// First, get the project metadata (which includes the password, but that is temporary).
 	var project Project = getProject(uint(id))
 	projectFilePath := filepath.Join(galleryPath, projectId+"_"+project.ProjectName, "project.json")
 
@@ -221,9 +247,12 @@ func FetchProject(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Create the response without the password.
+	response := stripPassword(project)
+
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(project); err != nil {
+	if err := json.NewEncoder(w).Encode(response); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	log.Println("Project fetched", project)
+	log.Println("Project fetched", response)
 }

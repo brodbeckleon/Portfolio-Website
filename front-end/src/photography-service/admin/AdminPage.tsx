@@ -17,7 +17,7 @@ const AdminPage: React.FC = () => {
     async function fetchProjects() {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch('http://localhost:3000/api/fetchProjects', {
+            const response = await fetch('/api/fetchProjects', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (response.ok) {
@@ -83,7 +83,7 @@ const AdminPage: React.FC = () => {
         });
 
         try {
-            const response = await fetch('http://localhost:3000/api/addProject', {
+            const response = await fetch('/api/addProject', {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -123,9 +123,8 @@ const AdminPage: React.FC = () => {
                         project.images && project.images.length > 0
                             ? project.images[0]
                             : null;
-
                     const imageUrl = firstImage
-                        ? `/api/image?image=galleries/${project.projectName}/${firstImage}`
+                        ? `/api/image?image=galleries/${firstImage}`
                         : '';
 
                     return (

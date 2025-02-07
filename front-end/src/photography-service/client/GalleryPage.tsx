@@ -20,7 +20,7 @@ const GalleryPage: React.FC = () => {
         console.log("🟢 Fetching project:", projectId);
 
         try {
-            const res = await fetch(`http://localhost:3000/api/fetchProject?projectId=${projectId}`);
+            const res = await fetch(`/api/fetchProject?projectId=${projectId}`);
             if (!res.ok) {
                 console.error("❌ Failed to fetch project:", res.statusText);
                 return;
@@ -108,7 +108,7 @@ const GalleryPage: React.FC = () => {
     const handleDownloadZip = async () => {
         if (!projectId) return;
         try {
-            const res = await fetch(`http://localhost:3000/api/downloadZip?projectId=${projectId}`);
+            const res = await fetch(`/api/downloadZip?projectId=${projectId}`);
             if (!res.ok) {
                 console.error("❌ Failed to download zip:", res.statusText);
                 return;
@@ -127,13 +127,6 @@ const GalleryPage: React.FC = () => {
         }
     };
 
-    const getRelativeImagePath = (absPath: string) => {
-        console.log("🔍 Getting relative path for:", absPath);
-        if (!absPath) return "";
-        const idx = absPath.indexOf("galleries/");
-        return idx !== -1 ? absPath.substring(idx) : absPath.split("/").pop() || absPath;
-    };
-
     return (
         <div style={{ padding: '20px' }}>
             {!project ? (
@@ -148,9 +141,8 @@ const GalleryPage: React.FC = () => {
                             <p>🚫 No images available.</p>
                         ) : (
                             visibleImages.map((imgPath, idx) => {
-                                const relativePath = getRelativeImagePath(imgPath);
-                                console.log("🔍 Image path:", imgPath, "=>", relativePath);
-                                const imageUrl = `/api/image?image=${relativePath}`;
+                                console.log("🔍 Image path:", imgPath);
+                                const imageUrl = `/api/image?image=galleries/${imgPath}`;
                                 return (
                                     <img
                                         key={idx}

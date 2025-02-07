@@ -11,7 +11,8 @@ import (
 	"strings"
 )
 
-const galleryFolder = ImagesFolder + "/galleries"
+const galleryFolder = "/galleries"
+const galleryPath = ImagesFolder + galleryFolder
 
 type Project struct {
 	ID          uint     `json:"id"`
@@ -21,7 +22,7 @@ type Project struct {
 }
 
 func getProjects() []Project {
-	entries, err := os.ReadDir(galleryFolder)
+	entries, err := os.ReadDir(galleryPath)
 	if err != nil {
 		log.Println("Error reading directory:", err)
 		return []Project{}
@@ -30,7 +31,7 @@ func getProjects() []Project {
 	var projects []Project
 	for _, entry := range entries {
 		if entry.IsDir() {
-			projectFilePath := filepath.Join(galleryFolder, entry.Name(), "project.json")
+			projectFilePath := filepath.Join(galleryPath, entry.Name(), "project.json")
 			file, err := os.Open(projectFilePath)
 			if err != nil {
 				log.Println("Error opening project file:", err)
@@ -66,7 +67,7 @@ func getProject(id uint) Project {
 }
 
 func getHighestID() uint {
-	entries, err := os.ReadDir(galleryFolder)
+	entries, err := os.ReadDir(galleryPath)
 	if err != nil {
 		log.Println("Error reading directory:", err)
 		return 0
@@ -135,7 +136,7 @@ func AddProject(w http.ResponseWriter, r *http.Request) {
 	}
 
 	images := r.MultipartForm.File["images"]
-	projectDir := filepath.Join(galleryFolder, strconv.Itoa(int(project.ID))+"_"+project.ProjectName)
+	projectDir := filepath.Join(galleryPath, strconv.Itoa(int(project.ID))+"_"+project.ProjectName)
 	if err := os.MkdirAll(projectDir, os.ModePerm); err != nil {
 		http.Error(w, "Unable to create project directory", http.StatusInternalServerError)
 		return
@@ -162,7 +163,8 @@ func AddProject(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		project.Images = append(project.Images, imagePath)
+		imageName := filepath.Join(strconv.Itoa(int(project.ID))+"_"+project.ProjectName, fileHeader.Filename)
+		project.Images = append(project.Images, imageName)
 	}
 
 	projectFilePath := filepath.Join(projectDir, "project.json")
@@ -204,7 +206,7 @@ func FetchProject(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var project Project = getProject(uint(id))
-	projectFilePath := filepath.Join(galleryFolder, projectId+"_"+project.ProjectName, "project.json")
+	projectFilePath := filepath.Join(galleryPath, projectId+"_"+project.ProjectName, "project.json")
 
 	file, err := os.Open(projectFilePath)
 	if err != nil {

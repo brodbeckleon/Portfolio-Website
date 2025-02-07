@@ -73,10 +73,8 @@ const GalleryPage: React.FC = () => {
     useEffect(() => {
         if (project) {
             console.log("✅ Project loaded:", project.projectName);
-            setPage(0);
-            setVisibleImages([]);  // Reset images
             setHasMore(true);
-            loadMoreImages();  // 🔥 Ensure first images are loaded
+            loadMoreImages();
         }
     }, [project]);
 

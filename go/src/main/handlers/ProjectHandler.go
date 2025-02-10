@@ -212,7 +212,36 @@ func AddProject(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteProject(w http.ResponseWriter, r *http.Request) {
-	//TODO: Implement
+	pathParts := strings.Split(r.URL.Path, "/")
+	if len(pathParts) < 3 {
+		http.Error(w, "Invalid request path", http.StatusBadRequest)
+		return
+	}
+	idStr := pathParts[len(pathParts)-1]
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid project ID", http.StatusBadRequest)
+		return
+	}
+
+	project := getProject(uint(id))
+	if project.ProjectName == "" {
+		http.Error(w, "Project not found", http.StatusNotFound)
+		return
+	}
+
+	projectDir := filepath.Join(galleryPath, strconv.Itoa(int(project.ID))+"_"+project.ProjectName)
+
+	err = os.RemoveAll(projectDir)
+	if err != nil {
+		log.Println("Error deleting project directory:", err)
+		http.Error(w, "Unable to delete project", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Project deleted successfully"))
+	log.Println("Deleted project:", project)
 }
 
 func UpdateProject(w http.ResponseWriter, r *http.Request) {

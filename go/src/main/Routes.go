@@ -28,8 +28,7 @@ func registerRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api/fetchProjects", handlers.FetchProjects)
 	mux.HandleFunc("/api/fetchProject", handlers.FetchProject)
 	mux.HandleFunc("/api/addProject", handlers.AddProject)
-	//TODO
-	mux.HandleFunc("/api/deleteProject", handlers.DeleteProject)
+	mux.HandleFunc("/api/deleteProject/", handlers.DeleteProject)
 	//TODO
 	mux.HandleFunc("/api/updateProject", handlers.UpdateProject)
 }

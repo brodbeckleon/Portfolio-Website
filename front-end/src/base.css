@@ -65,3 +65,27 @@ button {
 button:hover {
   background-color: #d0d0d0;
 }
+
+input {
+  color: black;
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: white;
+}
+
+label {
+  font-size: 1em;
+  font-family: Arial, Helvetica, sans-serif ;
+  font-weight: bold;
+  color: #555;
+}
+
+div.grid {
+  display:grid;
+  grid-template-columns: max-content max-content;
+  grid-gap:5px;
+  align-items: center;
+}

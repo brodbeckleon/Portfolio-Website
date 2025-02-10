@@ -41,33 +41,35 @@ const LoginPage: React.FC = () => {
         }}>
             <h2>Admin Login</h2>
             <form onSubmit={handleLogin} style={{ display: 'inline-block' }}>
-                <div>
-                    <label htmlFor="email">Email: </label>
-                    <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        style={{ marginBottom: '10px' }}
-                    />
+                <div className={"grid"}>
+                        <label htmlFor="email">Email: </label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            style={{ marginBottom: '10px' }}
+                        />
+
+                        <label htmlFor="password">Password: </label>
+                        <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            style={{ marginBottom: '10px' }}
+                        />
                 </div>
 
-                <div>
-                    <label htmlFor="password">Password: </label>
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        style={{ marginBottom: '10px' }}
-                    />
-                </div>
-
-                <button type="submit">Log In</button>
+                <button
+                    type="submit"
+                    style={{ width: '100%', marginTop: '10px' }}
+                >Log In
+                </button>
             </form>
         </div>
     );

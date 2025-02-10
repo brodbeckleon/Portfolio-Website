@@ -21,6 +21,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  margin-left: 10vw;
+  margin-right: 10vw;
+}
+
 h1 {
   font-size: 3em;
   font-family: Arial, Helvetica, sans-serif;

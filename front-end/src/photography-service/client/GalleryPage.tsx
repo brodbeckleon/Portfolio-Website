@@ -19,13 +19,19 @@ const links = [
 ];
 
 const GalleryPage: React.FC = () => {
-    const {projectId} = useParams();
+    const { projectId } = useParams();
     const [project, setProject] = useState<Project | null>(null);
     const [visibleImages, setVisibleImages] = useState<string[]>([]);
     const [page, setPage] = useState<number>(0);
     const [hasMore, setHasMore] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(false);
 
+    // Modal state
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [modalImgSrc, setModalImgSrc] = useState<string>('');
+    const [modalImgCaption, setModalImgCaption] = useState<string>('');
+
+    // Fetch the project data from the API
     const fetchProject = useCallback(async () => {
         if (!projectId) return;
         console.log("🟢 Fetching project:", projectId);
@@ -105,12 +111,12 @@ const GalleryPage: React.FC = () => {
 
         if (scrollTop + clientHeight >= scrollHeight - 200) {
             console.log("📌 Near bottom, loading next batch...");
-            setPage((prevPage) => prevPage + 1);  // Triggers useEffect([page])
+            setPage((prevPage) => prevPage + 1);
         }
     }, [hasMore, loading]);
 
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll, {passive: true});
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, [handleScroll]);
 
@@ -136,45 +142,81 @@ const GalleryPage: React.FC = () => {
         }
     };
 
+    // Modal event handlers
+    const handleImageClick = (src: string, alt: string) => {
+        setModalImgSrc(src);
+        setModalImgCaption(alt);
+        setIsModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <>
-        <Header title="Léon Brodbeck" socials={socials} links={links} />
+            <Header title="Léon Brodbeck" socials={socials} links={links} />
 
-    <div className="gallery-container">
-            {!project ? (
-                <p>⏳ Loading project data...</p>
-            ) : (
-                <>
-                    <h2 className="gallery-header">📸 Gallery: {project.projectName}</h2>
-                    <button className="download-button" onClick={handleDownloadZip}>
-                        ⬇️ Download All as ZIP
-                    </button>
+            <div className="gallery-container">
+                {!project ? (
+                    <p>⏳ Loading project data...</p>
+                ) : (
+                    <>
+                        <div className="gallery-header-container">
+                            <h2 className="gallery-header">
+                                📸 Gallery: {project.projectName}
+                            </h2>
+                            <button className="download-button" onClick={handleDownloadZip}>
+                                ⬇️ Download All as ZIP
+                            </button>
+                        </div>
 
-                    <div className="row">
-                        {[0, 1, 2, 3].map((colIndex) => (
-                            <div className="column" key={colIndex}>
-                                {visibleImages
-                                    .filter((_, idx) => idx % 4 === colIndex)
-                                    .map((imgPath, idx) => {
-                                        const imageUrl = `/api/image?image=galleries/${imgPath}`;
-                                        return (
-                                            <img
-                                                key={idx}
-                                                src={imageUrl}
-                                                alt={`Project ${project.projectName} - ${imgPath}`}
-                                                className="gallery-image"
-                                            />
-                                        );
-                                    })}
-                            </div>
-                        ))}
-                    </div>
+                        <div className="row">
+                            {[0, 1, 2, 3].map((colIndex) => (
+                                <div className="column" key={colIndex}>
+                                    {visibleImages
+                                        .filter((_, idx) => idx % 4 === colIndex)
+                                        .map((imgPath, idx) => {
+                                            const imageUrl = `/api/image?image=galleries/${imgPath}`;
+                                            const altText = `Project ${project.projectName} - ${imgPath}`;
+                                            return (
+                                                <img
+                                                    key={idx}
+                                                    src={imageUrl}
+                                                    alt={altText}
+                                                    className="gallery-image"
+                                                    onClick={() =>
+                                                        handleImageClick(imageUrl, altText)
+                                                    }
+                                                />
+                                            );
+                                        })}
+                                </div>
+                            ))}
+                        </div>
 
-                    {loading && <p>⏳ Loading images...</p>}
-                    {!hasMore && !loading && <p>🚫 No more images to load.</p>}
-                </>
+                        {loading && <p>⏳ Loading images...</p>}
+                        {!hasMore && !loading && <p>🚫 No more images to load.</p>}
+                    </>
+                )}
+            </div>
+
+            {/* Modal markup */}
+            {isModalOpen && (
+                <div id="myModal" className="modal" onClick={handleModalClose}>
+                    <span className="close" onClick={handleModalClose}>
+                        &times;
+                    </span>
+                    <img
+                        className="modal-content"
+                        src={modalImgSrc}
+                        alt=""
+                        onClick={(e) => e.stopPropagation()}
+                    />
+
+                    <div id="caption">{modalImgCaption}</div>
+                </div>
             )}
-        </div>
         </>
     );
 };

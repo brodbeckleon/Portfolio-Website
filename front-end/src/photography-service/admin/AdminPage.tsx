@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DragAndDropUpload from './../../components/DragAndDropUpload'; // adjust the path as needed
 import './AdminPage.css';
 
 interface Project {
@@ -11,7 +12,7 @@ interface Project {
 const AdminPage: React.FC = () => {
     const [projects, setProjects] = useState<Project[]>([]);
     const [projectName, setProjectName] = useState('');
-    const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const navigate = useNavigate();
 
     async function fetchProjects() {
@@ -43,12 +44,6 @@ const AdminPage: React.FC = () => {
         fetchProjects();
     }, []);
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files) {
-            setSelectedFiles(event.target.files);
-        }
-    };
-
     const handleLogout = () => {
         localStorage.removeItem('token');
         navigate('/login');
@@ -61,9 +56,7 @@ const AdminPage: React.FC = () => {
         try {
             const response = await fetch(`/api/deleteProject/${projectId}`, {
                 method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
 
             if (response.ok) {
@@ -86,7 +79,7 @@ const AdminPage: React.FC = () => {
             return;
         }
 
-        if (!selectedFiles || selectedFiles.length === 0) {
+        if (selectedFiles.length === 0) {
             alert('Please select at least one image');
             return;
         }
@@ -96,7 +89,6 @@ const AdminPage: React.FC = () => {
 
         const formData = new FormData();
         formData.append('name', projectName);
-
         Array.from(selectedFiles).forEach((file) => {
             formData.append('images', file);
         });
@@ -104,16 +96,14 @@ const AdminPage: React.FC = () => {
         try {
             const response = await fetch('/api/addProject', {
                 method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
                 body: formData,
             });
 
             if (response.ok) {
                 setProjectName('');
-                setSelectedFiles(null);
-                fetchProjects();
+                setSelectedFiles([]);
+                await fetchProjects();
             } else {
                 console.error('Failed to add project');
             }
@@ -127,18 +117,18 @@ const AdminPage: React.FC = () => {
     };
 
     return (
-        <>
-            <div>
+        <div>
+            <div className="admin-header">
                 <h1>Admin Page</h1>
-                <button
-                    className={'logout-button'}
-                    onClick={handleLogout}>
+                <button className="logout-button" onClick={handleLogout}>
                     Logout
                 </button>
+            </div>
 
-                <section className={'existing-projects'}>
+            <div id="admin-container">
+                <section className="existing-projects">
                     <h2>Existing Projects</h2>
-                    <div className={'project-cards'}>
+                    <div className="project-cards">
                         {projects.map((project) => {
                             const firstImage =
                                 project.images && project.images.length > 0
@@ -150,7 +140,7 @@ const AdminPage: React.FC = () => {
 
                             return (
                                 <div
-                                    className={'project-card'}
+                                    className="project-card"
                                     key={project.id}
                                     onDoubleClick={() => openProject(project.id)}
                                 >
@@ -158,7 +148,6 @@ const AdminPage: React.FC = () => {
                                         <img
                                             src={imageUrl}
                                             alt={`${project.projectName} thumbnail`}
-
                                         />
                                     )}
                                     <button onClick={() => handleDeleteProject(project.id)}>
@@ -171,31 +160,28 @@ const AdminPage: React.FC = () => {
                     </div>
                 </section>
 
-                    <section className={'add-project'}>
-                        <h2>Add New Project</h2>
-                        <form onSubmit={handleAddProject}>
-                            <label htmlFor="projectName">Project Name: </label>
-                            <input
-                                type="text"
-                                id="projectName"
-                                value={projectName}
-                                onChange={(e) => setProjectName(e.target.value)}
-                            />
-                            <div>
-                                <label htmlFor="images">Images: </label>
-                                <input
-                                    type="file"
-                                    id="images"
-                                    multiple
-                                    onChange={handleFileChange}
-                                />
-                            </div>
-                            <button type="submit">Add Project</button>
-                        </form>
-                    </section>
-                </div>
-            </>
-            );
-            };
+                <section className="add-project">
+                    <h2>Add New Project</h2>
+                    <form onSubmit={handleAddProject}>
+                        <label htmlFor="projectName">Project Name: </label>
+                        <input
+                            type="text"
+                            id="projectName"
+                            value={projectName}
+                            onChange={(e) => setProjectName(e.target.value)}
+                        />
+                        <label htmlFor="images">Images: </label>
+                        <DragAndDropUpload
+                            onFilesSelected={(files) => setSelectedFiles(files)}
+                            multiple={true}
+                            accept="image/*"
+                        />
+                        <button type="submit">Add Project</button>
+                    </form>
+                </section>
+            </div>
+        </div>
+    );
+};
 
-            export default AdminPage;
+export default AdminPage;

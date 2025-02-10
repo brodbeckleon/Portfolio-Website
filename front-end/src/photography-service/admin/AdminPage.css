@@ -2,26 +2,45 @@ body {
   margin: 10vw;
 }
 
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#admin-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+
 .logout-button {
   float: right;
 }
 
+.existing-projects {
+  width: 65%;
+}
+
 .project-cards {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   margin-top: 20px;
-  gap: 1vw;
+  gap: 20px;
 }
 
 .project-card {
   position: relative;
-  width: 15vw;
+  width: 20%;
   height: auto;
   padding-bottom: 2px;
   border-bottom-width: 1px;
   border-radius: 5px;
   border-color: #000;
   border-style: solid;
+  margin: 1vw;
   transition: box-shadow 0.3s ease-in-out;
 }
 
@@ -62,8 +81,7 @@ body {
 }
 
 .add-project {
-  max-width: 500px;
-  margin: 2rem auto;
+  width: 30%;
   padding: 2rem;
   background: #f9f9f9;
   border-radius: 10px;
@@ -83,11 +101,6 @@ body {
   gap: 1rem;
 }
 
-.add-project label {
-  font-weight: bold;
-  color: #555;
-}
-
 .add-project input[type="text"],
 .add-project input[type="file"] {
   width: 100%;
@@ -96,10 +109,6 @@ body {
   border-radius: 5px;
   font-size: 1rem;
   background-color: white;
-}
-
-.add-project input[type="file"] {
-  width: 100%;
 }
 
 .add-project button {

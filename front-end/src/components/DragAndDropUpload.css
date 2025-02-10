@@ -1,0 +1,18 @@
+/* Example CSS for the drag & drop component */
+.file-upload-wrapper {
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.file-upload-wrapper.active {
+    background-color: #f0f0f0;
+}
+
+.file-upload-wrapper p {
+    margin: 0;
+    color: #666;
+}

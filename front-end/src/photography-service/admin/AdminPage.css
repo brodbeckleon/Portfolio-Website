@@ -1,0 +1,124 @@
+body {
+  margin: 10vw;
+}
+
+.logout-button {
+  float: right;
+}
+
+.project-cards {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  gap: 1vw;
+}
+
+.project-card {
+  position: relative;
+  width: 15vw;
+  height: auto;
+  padding-bottom: 2px;
+  border-bottom-width: 1px;
+  border-radius: 5px;
+  border-color: #000;
+  border-style: solid;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.project-card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); /* Apply shadow only when hovering */
+}
+
+.project-card img,
+.project-card button,
+.project-card h3 {
+  box-shadow: none !important; /* Ensure no shadow on child elements */
+}
+
+.project-card img {
+  object-fit: cover;
+  width: 100%;
+  aspect-ratio: 1/1;
+}
+
+.project-card button {
+  opacity: 30%;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  margin: 10px;
+  width: 2vw;
+  height: 2vw;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 0.5vw;
+}
+
+.project-card h3 {
+  text-align: left;
+  padding-left: 10px;
+  margin: 0;
+}
+
+.add-project {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.add-project h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.add-project form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.add-project label {
+  font-weight: bold;
+  color: #555;
+}
+
+.add-project input[type="text"],
+.add-project input[type="file"] {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: white;
+}
+
+.add-project input[type="file"] {
+  width: 100%;
+}
+
+.add-project button {
+  width: 150px;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .add-project {
+    max-width: 90%;
+    padding: 1.5rem;
+  }
+}
+
+
+
+
+

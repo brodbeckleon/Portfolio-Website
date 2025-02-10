@@ -1,12 +1,22 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import './GalleryPage.css';
+import Header from "../../components/Header.tsx";
 
 interface Project {
     id: number;
     projectName: string;
     images: string[];
 }
+
+const socials = [
+    { name: 'Instagram', url: 'https://www.instagram.com/leon.brodbeck/' },
+    { name: 'YouTube', url: 'https://www.youtube.com/@leon.brodbeck' },
+];
+
+const links = [
+    { name: 'contact', url: '/contact' },
+];
 
 const GalleryPage: React.FC = () => {
     const {projectId} = useParams();
@@ -127,7 +137,10 @@ const GalleryPage: React.FC = () => {
     };
 
     return (
-        <div className="gallery-container">
+        <>
+        <Header title="Léon Brodbeck" socials={socials} links={links} />
+
+    <div className="gallery-container">
             {!project ? (
                 <p>⏳ Loading project data...</p>
             ) : (
@@ -162,6 +175,7 @@ const GalleryPage: React.FC = () => {
                 </>
             )}
         </div>
+        </>
     );
 };
 

@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
+import './base.css'
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import AdminPage from "./photography-service/admin/AdminPage.tsx";
 import LoginPage from "./photography-service/admin/LoginPage.tsx";

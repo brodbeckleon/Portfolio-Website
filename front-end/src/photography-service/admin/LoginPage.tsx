@@ -10,7 +10,7 @@ const LoginPage: React.FC = () => {
         e.preventDefault();
 
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch('/api/adminLogin', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -20,7 +20,6 @@ const LoginPage: React.FC = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                // Suppose the token is returned in data.token
                 localStorage.setItem('token', data.token);
                 navigate('/admin');
             } else {

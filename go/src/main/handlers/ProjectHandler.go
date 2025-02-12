@@ -17,7 +17,6 @@ import (
 const galleryFolder = "/galleries"
 const galleryPath = ImagesFolder + galleryFolder
 
-// Project is used for internal storage (and is written to disk).
 type Project struct {
 	ID          uint     `json:"id"`
 	ProjectName string   `json:"projectName"`
@@ -25,15 +24,12 @@ type Project struct {
 	Images      []string `json:"images"`
 }
 
-// ProjectResponse is used when sending project data over HTTP.
-// It intentionally excludes the password field.
 type ProjectResponse struct {
 	ID          uint     `json:"id"`
 	ProjectName string   `json:"projectName"`
 	Images      []string `json:"images"`
 }
 
-// stripPassword converts a Project to a ProjectResponse.
 func stripPassword(p Project) ProjectResponse {
 	return ProjectResponse{
 		ID:          p.ID,

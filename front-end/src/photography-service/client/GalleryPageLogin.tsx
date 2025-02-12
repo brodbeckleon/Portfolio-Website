@@ -9,7 +9,7 @@ export default function GalleryLoginPage() {
 
     const handleSubmit = async () => {
         // Send login request; the endpoint should return a JSON object containing a JWT token.
-        const res = await fetch("/api/access", {
+        const res = await fetch("/api/galleryLogin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ project_id: Number(projectId), password }),

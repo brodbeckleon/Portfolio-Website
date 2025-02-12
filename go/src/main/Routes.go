@@ -23,16 +23,14 @@ func registerRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api/slides", handlers.SlidesHandler)
 	mux.HandleFunc("/api/image", handlers.ServeImage)
 	//TODO
-	mux.HandleFunc("/api/downloadZip", handlers.ServeZipFile)
-	mux.HandleFunc("/api/login", handlers.LoginHandler)
-	mux.HandleFunc("/api/fetchProjects", handlers.FetchProjects)
+	mux.HandleFunc("/api/downloadZip", handlers.RequireToken(handlers.ServeZipFile))
+	mux.HandleFunc("/api/adminLogin", handlers.LoginHandler)
+	mux.HandleFunc("/api/fetchProjects", handlers.RequireToken(handlers.FetchProjects))
 
-	//mux.HandleFunc("/api/fetchProject", handlers.FetchProject)
 	mux.HandleFunc("/api/fetchProject", handlers.RequireToken(handlers.FetchProject))
-	//mux.HandleFunc("/api/addProject", handlers.AddProject)
 	mux.HandleFunc("/api/addProject", handlers.RequireToken(handlers.AddProject))
-	mux.HandleFunc("/api/deleteProject/", handlers.DeleteProject)
+	mux.HandleFunc("/api/deleteProject/", handlers.RequireToken(handlers.DeleteProject))
 	//TODO
-	mux.HandleFunc("/api/updateProject", handlers.UpdateProject)
-	mux.HandleFunc("/api/access", handlers.CheckProjectAccess)
+	mux.HandleFunc("/api/updateProject", handlers.RequireToken(handlers.UpdateProject))
+	mux.HandleFunc("/api/galleryLogin", handlers.CheckProjectAccess)
 }

@@ -7,6 +7,9 @@ import LoginPage from "./photography-service/admin/LoginPage.tsx";
 import PrivateRoute from "./photography-service/admin/PrivateRoute.tsx";
 import Home from "./Home.tsx";
 import GalleryPage from "./photography-service/client/GalleryPage.tsx";
+import GalleryLoginPage from './photography-service/client/GalleryPageLogin.tsx';
+import NotFound from './components/NotFound.tsx';
+
 
 export default function App() {
     return (
@@ -15,6 +18,7 @@ export default function App() {
                 <Route path="/" element={<Home/>} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/gallery/:projectId" element={<GalleryPage />} />
+                <Route path="/galleryLogin/:projectId" element={<GalleryLoginPage />} />
 
                 <Route
                     path="/admin"
@@ -24,8 +28,8 @@ export default function App() {
                         </PrivateRoute>
                     }
                 />
-                <Route path="*" element={<App />} />
-            </Routes>
+                <Route path="*" element={<NotFound />} />
+                </Routes>
         </BrowserRouter>
     )
 }

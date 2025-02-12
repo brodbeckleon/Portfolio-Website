@@ -113,7 +113,7 @@ const AdminPage: React.FC = () => {
     };
 
     const openProject = (projectId: string) => {
-        navigate(`/gallery/${projectId}`);
+        navigate(`/galleryLogin/${projectId}`);
     };
 
     return (

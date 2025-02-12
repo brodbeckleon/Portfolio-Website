@@ -1,5 +1,6 @@
+// GalleryPage.tsx
 import React, { useEffect, useState, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './GalleryPage.css';
 import Header from "../../components/Header.tsx";
 
@@ -20,6 +21,7 @@ const links = [
 
 const GalleryPage: React.FC = () => {
     const { projectId } = useParams();
+    const navigate = useNavigate();
     const [project, setProject] = useState<Project | null>(null);
     const [visibleImages, setVisibleImages] = useState<string[]>([]);
     const [page, setPage] = useState<number>(0);
@@ -31,20 +33,37 @@ const GalleryPage: React.FC = () => {
     const [modalImgSrc, setModalImgSrc] = useState<string>('');
     const [modalImgCaption, setModalImgCaption] = useState<string>('');
 
-    // Fetch the project data from the API
+    // Check for a valid token (project-specific or admin) on mount.
+    useEffect(() => {
+        const token =
+            sessionStorage.getItem(`galleryToken_${projectId}`) ||
+            sessionStorage.getItem("galleryAdminToken");
+        if (!token) {
+            navigate(`/login/${projectId}`); // Redirect to login if token missing.
+        }
+    }, [projectId, navigate]);
+
+    // Fetch project data with the token in the Authorization header.
     const fetchProject = useCallback(async () => {
         if (!projectId) return;
+        const token =
+            sessionStorage.getItem(`galleryToken_${projectId}`) ||
+            sessionStorage.getItem("galleryAdminToken");
         console.log("🟢 Fetching project:", projectId);
 
         try {
-            const res = await fetch(`/api/fetchProject?projectId=${projectId}`);
+            const res = await fetch(`/api/fetchProject?projectId=${projectId}`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
             if (!res.ok) {
                 console.error("❌ Failed to fetch project:", res.statusText);
                 return;
             }
             const data: Project = await res.json();
             console.log("✅ Project data received:", data);
-
             setProject(data);
         } catch (err) {
             console.error("❌ Error fetching project:", err);
@@ -60,27 +79,22 @@ const GalleryPage: React.FC = () => {
             console.log("❌ No project or images found.");
             return;
         }
-
         if (loading || !hasMore) {
             console.log("🔴 Skipping loadMoreImages (loading:", loading, ", hasMore:", hasMore, ")");
             return;
         }
-
         setLoading(true);
         const pageSize = 10;
         const start = page * pageSize;
         const end = start + pageSize;
-
         console.log(`📌 Loading images from index ${start} to ${end}`);
         const newChunk = project.images.slice(start, end);
-
         if (newChunk.length === 0) {
             console.log("🚫 No more images to load.");
             setHasMore(false);
             setLoading(false);
             return;
         }
-
         console.log("🖼️ Adding images:", newChunk);
         setVisibleImages((prev) => [...prev, ...newChunk]);
         setPage((prev) => prev + 1);
@@ -104,11 +118,9 @@ const GalleryPage: React.FC = () => {
 
     const handleScroll = useCallback(() => {
         if (!hasMore || loading) return;
-
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         const scrollHeight = document.documentElement.scrollHeight;
         const clientHeight = document.documentElement.clientHeight;
-
         if (scrollTop + clientHeight >= scrollHeight - 200) {
             console.log("📌 Near bottom, loading next batch...");
             setPage((prevPage) => prevPage + 1);
@@ -120,10 +132,18 @@ const GalleryPage: React.FC = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [handleScroll]);
 
+    // Download ZIP file, sending the token in the Authorization header.
     const handleDownloadZip = async () => {
         if (!projectId) return;
+        const token =
+            sessionStorage.getItem(`galleryToken_${projectId}`) ||
+            sessionStorage.getItem("galleryAdminToken");
         try {
-            const res = await fetch(`/api/downloadZip?projectId=${projectId}`);
+            const res = await fetch(`/api/downloadZip?projectId=${projectId}`, {
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                },
+            });
             if (!res.ok) {
                 console.error("❌ Failed to download zip:", res.statusText);
                 return;
@@ -142,7 +162,7 @@ const GalleryPage: React.FC = () => {
         }
     };
 
-    // Modal event handlers
+    // Modal event handlers.
     const handleImageClick = (src: string, alt: string) => {
         setModalImgSrc(src);
         setModalImgCaption(alt);
@@ -177,7 +197,11 @@ const GalleryPage: React.FC = () => {
                                     {visibleImages
                                         .filter((_, idx) => idx % 4 === colIndex)
                                         .map((imgPath, idx) => {
-                                            const imageUrl = `/api/image?image=galleries/${imgPath}`;
+                                            // For protected images, you might append the token as a query parameter.
+                                            const token =
+                                                sessionStorage.getItem(`galleryToken_${projectId}`) ||
+                                                sessionStorage.getItem("galleryAdminToken");
+                                            const imageUrl = `/api/image?image=galleries/${imgPath}&token=${token}`;
                                             const altText = `Project ${project.projectName} - ${imgPath}`;
                                             return (
                                                 <img
@@ -185,9 +209,7 @@ const GalleryPage: React.FC = () => {
                                                     src={imageUrl}
                                                     alt={altText}
                                                     className="gallery-image"
-                                                    onClick={() =>
-                                                        handleImageClick(imageUrl, altText)
-                                                    }
+                                                    onClick={() => handleImageClick(imageUrl, altText)}
                                                 />
                                             );
                                         })}
@@ -201,19 +223,17 @@ const GalleryPage: React.FC = () => {
                 )}
             </div>
 
-            {/* Modal markup */}
             {isModalOpen && (
                 <div id="myModal" className="modal" onClick={handleModalClose}>
-                    <span className="close" onClick={handleModalClose}>
-                        &times;
-                    </span>
+          <span className="close" onClick={handleModalClose}>
+            &times;
+          </span>
                     <img
                         className="modal-content"
                         src={modalImgSrc}
                         alt=""
                         onClick={(e) => e.stopPropagation()}
                     />
-
                     <div id="caption">{modalImgCaption}</div>
                 </div>
             )}

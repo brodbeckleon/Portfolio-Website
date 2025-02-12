@@ -26,9 +26,13 @@ func registerRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api/downloadZip", handlers.ServeZipFile)
 	mux.HandleFunc("/api/login", handlers.LoginHandler)
 	mux.HandleFunc("/api/fetchProjects", handlers.FetchProjects)
-	mux.HandleFunc("/api/fetchProject", handlers.FetchProject)
-	mux.HandleFunc("/api/addProject", handlers.AddProject)
+
+	//mux.HandleFunc("/api/fetchProject", handlers.FetchProject)
+	mux.HandleFunc("/api/fetchProject", handlers.RequireToken(handlers.FetchProject))
+	//mux.HandleFunc("/api/addProject", handlers.AddProject)
+	mux.HandleFunc("/api/addProject", handlers.RequireToken(handlers.AddProject))
 	mux.HandleFunc("/api/deleteProject/", handlers.DeleteProject)
 	//TODO
 	mux.HandleFunc("/api/updateProject", handlers.UpdateProject)
+	mux.HandleFunc("/api/access", handlers.CheckProjectAccess)
 }

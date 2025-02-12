@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"crypto/subtle"
 	"encoding/json"
+	"github.com/golang-jwt/jwt/v4"
 	"io"
 	"log"
 	"net/http"
@@ -9,6 +11,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const galleryFolder = "/galleries"
@@ -67,8 +70,11 @@ func getProjects() []Project {
 			projects = append(projects, project)
 		}
 	}
-
-	log.Println("Projects found", projects)
+	var projectNames []string
+	for _, project := range projects {
+		projectNames = append(projectNames, strconv.Itoa(int(project.ID)), project.ProjectName, project.Password, "\n")
+	}
+	log.Println("Projects found:\n", projectNames)
 	return projects
 }
 
@@ -249,39 +255,103 @@ func UpdateProject(w http.ResponseWriter, r *http.Request) {
 }
 
 func FetchProject(w http.ResponseWriter, r *http.Request) {
-	projectId := r.URL.Query().Get("projectId")
-	if projectId == "" {
+	// Get the project ID from the query string (or however you expect it)
+	projectIdStr := r.URL.Query().Get("projectId")
+	if projectIdStr == "" {
 		http.Error(w, "Project ID is required", http.StatusBadRequest)
 		return
 	}
 
-	id, err := strconv.Atoi(projectId)
+	// Parse the project ID
+	reqProjectID, err := strconv.Atoi(projectIdStr)
 	if err != nil {
 		http.Error(w, "Invalid project ID", http.StatusBadRequest)
 		return
 	}
 
-	// First, get the project metadata (which includes the password, but that is temporary).
-	var project Project = getProject(uint(id))
-	projectFilePath := filepath.Join(galleryPath, projectId+"_"+project.ProjectName, "project.json")
+	// Get the token claims from the context
+	claims, ok := r.Context().Value("claims").(*Claims)
+	if !ok {
+		http.Error(w, "Token claims missing", http.StatusUnauthorized)
+		return
+	}
 
-	file, err := os.Open(projectFilePath)
-	if err != nil {
+	// If the user is not an admin, ensure the token's project ID matches the requested project
+	if !claims.IsAdmin && claims.ProjectID != uint(reqProjectID) {
+		http.Error(w, "Not authorized to access this project", http.StatusUnauthorized)
+		return
+	}
+
+	// Proceed to fetch the project as usual...
+	project := getProject(uint(reqProjectID))
+	if project.ID == 0 {
 		http.Error(w, "Project not found", http.StatusNotFound)
 		return
 	}
-	defer file.Close()
-	if err := json.NewDecoder(file).Decode(&project); err != nil {
-		http.Error(w, "Error decoding project file", http.StatusInternalServerError)
+
+	// Strip password before sending
+	response := stripPassword(project)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+func CheckProjectAccess(w http.ResponseWriter, r *http.Request) {
+	log.Println("CheckProjectAccess called")
+	if r.Method != http.MethodPost {
+		log.Println("Method not allowed")
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Create the response without the password.
-	response := stripPassword(project)
-
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// Decode request body.
+	var req struct {
+		ProjectID uint   `json:"project_id"`
+		Password  string `json:"password"`
 	}
-	log.Println("Project fetched", response)
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Println(r.Body)
+		log.Println("Invalid request body")
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// Retrieve the project.
+	project := getProject(req.ProjectID)
+	if project.ID == 0 {
+		log.Println("Project not found")
+		http.Error(w, "Project not found", http.StatusNotFound)
+		return
+	}
+
+	// Compare passwords using constant-time comparison.
+	if subtle.ConstantTimeCompare([]byte(project.Password), []byte(req.Password)) != 1 {
+		log.Println("Wrong password")
+		http.Error(w, "Wrong password", http.StatusUnauthorized)
+		return
+	}
+
+	// Password is correct—create JWT token.
+	expirationTime := time.Now().Add(15 * time.Minute)
+	claims := &Claims{
+		ProjectID: project.ID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expirationTime),
+			Subject:   strconv.Itoa(int(project.ID)),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		log.Println("Could not generate token")
+		http.Error(w, "Could not generate token", http.StatusInternalServerError)
+		return
+	}
+
+	// Return the token in a JSON response.
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{
+		"token": tokenString,
+	})
 }

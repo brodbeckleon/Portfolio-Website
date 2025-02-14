@@ -1,16 +1,25 @@
 import React from 'react';
 import './Header.css';
 
-interface HeaderProps {
-    title: string;
-    socials: { name: string; url: string }[];
-    links: { name: string; url: string }[];
-}
+const title = "léon brodbeck";
 
-const Header: React.FC<HeaderProps> = ({ title, socials, links }) => {
+const socials = [
+    { name: 'Instagram', url: 'https://www.instagram.com/leon.brodbeck/' },
+    { name: 'YouTube', url: 'https://www.youtube.com/@leon.brodbeck' },
+    { name: 'GitHub', url: 'https://github.com/brodbeckleon' },
+];
+
+const links = [
+    { name: 'portfolio', url: '/' },
+    { name: 'presets', url: '/presets' },
+    { name: 'courses', url: '/courses' },
+    { name: 'contact', url: '/contact' },
+];
+
+const Header: React.FC = () => {
     return (
         <header className="header">
-            <div className="social-icons">
+            <div className="socials">
                 {socials.map((social, index) => (
                     <a
                         key={index}
@@ -27,20 +36,27 @@ const Header: React.FC<HeaderProps> = ({ title, socials, links }) => {
                     </a>
                 ))}
             </div>
-            <a href="/" className="title-link">
-                <h1 className="title">{title}</h1>
-            </a>
-            <nav className="nav">
-                <ul className="nav-list">
-                    {links.map((link, index) => (
-                        <li key={index}>
-                            <a href={link.url} className="nav-link">
-                                {link.name}
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-            </nav>
+            <div className={"title-wrapper"}>
+                <a href="/" className="title-link">
+                    <h1 className="title">{title}</h1>
+                </a>
+                <nav className="nav">
+                    <ul className="nav-list">
+                        {links.map((link, index) => (
+                            <li key={index}>
+                                <a href={link.url} className="nav-link">
+                                    {link.name}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            </div>
+            <div className={"actions"}>
+                <a href="/login" className="action-link">
+                    Login
+                </a>
+            </div>
         </header>
     );
 };

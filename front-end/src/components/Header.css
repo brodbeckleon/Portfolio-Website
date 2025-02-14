@@ -1,62 +1,96 @@
 .header {
-    top: 0;
-    max-width: 100vw;
-    z-index: 999;
-    padding: 1rem;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     position: relative;
-  }
-  
-  .social-icons {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.socials {
+    flex: 0 1 25%;
+    max-width: 25%;
+    justify-content: flex-start;
+    align-content: center;
     display: flex;
     gap: 1rem;
-    position: absolute;
-    left: 1rem;
-  }
-  
-  .icon {
-    width: 24px;
-    height: 24px;
-  }
+}
 
-  .title {
+.icon {
+    width: 22px;
+    height: 22px;
+}
+
+.title-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1 0 67%;
+    align-items: center;
+}
+
+.title-link {
+    flex: 0 0 100%;
+    display: block;
+    text-decoration: none;
+    margin: 0 0 0.5rem 0; /* Add bottom margin to create a gap */
+    text-align: center;
+}
+
+.title {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-family: 'Helvetica Neue', sans-serif;
     color: #000;
     text-align: center;
     flex: 1; /* Ensures it takes up the center space */
-  }
+}
 
-  .nav {
-    position: absolute;
-    right: 1rem;
-  }
-  
-  .nav-list {
+.nav {
+    flex: 0 0 100%;
+    display: block;
+    text-decoration: none;
+    margin: 0;
+    text-align: center;
+}
+
+.nav-list {
     list-style-type: none;
     margin: 0;
     padding: 0;
     display: flex;
+    flex: 0 0 100%;
+    justify-content: center;
     gap: 1rem;
-  }
-  
-  .nav-link {
+}
+
+.nav-link {
     color: #000;
     text-decoration: none;
     font-family: 'Lora', serif;
-  }
-  
-  .nav-link:hover {
-    text-decoration: underline;
-  }
+}
 
-.title-link {
+.nav-link:hover {
+    color: #222
+}
+
+.nav-link.active {
+    color: #000;
+    text-decoration: underline;
+}
+
+.actions {
+    flex: 0 1 25%;
+    max-width: 25%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.action-link {
+    color: #000;
     text-decoration: none;
-    margin: 0;
-    text-align: center;
-    flex: 1; /* Ensures it takes up the center space */
+    font-family: 'Lora', serif;
+}
+
+a {
+    font-size: 0.75rem;
 }

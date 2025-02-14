@@ -8,19 +8,6 @@ import ThreeScene from "./three/ThreeScene.tsx";
 function Home() {
     const [activeSection, setActiveSection] = useState('middle')
 
-    const socials = [
-        { name: 'Instagram', url: 'https://www.instagram.com/leon.brodbeck/' },
-        { name: 'YouTube', url: 'https://www.youtube.com/@leon.brodbeck' },
-        { name: 'GitHub', url: 'https://github.com/brodbeckleon' },
-    ];
-
-    const links = [
-        { name: 'portfolio', url: '/portfolio' },
-        { name: 'presets', url: '/presets' },
-        { name: 'courses', url: '/courses' },
-        { name: 'contact', url: '/contact' },
-    ];
-
     useEffect(() => {
         if (activeSection === 'right') {
             document.body.classList.add('no-scroll')
@@ -31,7 +18,7 @@ function Home() {
 
     return (
         <>
-            <Header title="Léon Brodbeck" socials={socials} links={links} />
+            <Header/>
 
             <div className={`container ${activeSection}`}>
                 <div className="section left" onClick={() => setActiveSection('left')}>

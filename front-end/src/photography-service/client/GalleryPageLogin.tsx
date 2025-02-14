@@ -1,6 +1,6 @@
-// GalleryLoginPage.jsx
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Header from "../../components/Header.tsx";
 
 export default function GalleryLoginPage() {
     const [password, setPassword] = useState("");
@@ -20,7 +20,6 @@ export default function GalleryLoginPage() {
     }, []);
 
     const handleSubmit = async () => {
-        // Send login request; the endpoint should return a JSON object containing a JWT token.
         const res = await fetch("/api/galleryLogin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -30,9 +29,6 @@ export default function GalleryLoginPage() {
         if (res.ok) {
             const data = await res.json();
             const token = data.token;
-            // Decide which storage key to use.
-            // For example, if projectId is "admin" (or if you have a flag in the response),
-            // store the token as an admin token.
             sessionStorage.setItem(`galleryToken_${projectId}`, token);
             navigate(`/gallery/${projectId}`);
         } else {
@@ -41,13 +37,30 @@ export default function GalleryLoginPage() {
     };
 
     return (
-        <div>
-            <h2>Enter password for project {projectId}</h2>
-            <input
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button onClick={handleSubmit}>Access</button>
+        <>
+        <Header />
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '50vh',
+            backgroundColor: 'white',
+        }}>
+            <div style={{
+                textAlign: 'center',
+                gap: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}>
+                <h2>Enter password for project {projectId}</h2>
+                <input
+                    type="password"
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <button onClick={handleSubmit}>Access</button>
+            </div>
         </div>
+        </>
     );
 }

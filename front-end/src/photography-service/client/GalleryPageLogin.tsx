@@ -1,11 +1,23 @@
 // GalleryLoginPage.jsx
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function GalleryLoginPage() {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const { projectId } = useParams();
+
+    const checkAdminToken = async () => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            sessionStorage.setItem("galleryAdminToken", token);
+            navigate(`/gallery/${projectId}`);
+        }
+    }
+
+    useEffect(() => {
+        checkAdminToken();
+    }, []);
 
     const handleSubmit = async () => {
         // Send login request; the endpoint should return a JSON object containing a JWT token.
@@ -21,11 +33,7 @@ export default function GalleryLoginPage() {
             // Decide which storage key to use.
             // For example, if projectId is "admin" (or if you have a flag in the response),
             // store the token as an admin token.
-            if (projectId === "admin") {
-                sessionStorage.setItem("galleryAdminToken", token);
-            } else {
-                sessionStorage.setItem(`galleryToken_${projectId}`, token);
-            }
+            sessionStorage.setItem(`galleryToken_${projectId}`, token);
             navigate(`/gallery/${projectId}`);
         } else {
             alert("Wrong password!");

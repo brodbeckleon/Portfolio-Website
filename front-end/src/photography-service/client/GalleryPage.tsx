@@ -39,7 +39,7 @@ const GalleryPage: React.FC = () => {
             sessionStorage.getItem(`galleryToken_${projectId}`) ||
             sessionStorage.getItem("galleryAdminToken");
         if (!token) {
-            navigate(`/login/${projectId}`); // Redirect to login if token missing.
+            navigate(`/galleryLogin/${projectId}`); // Redirect to login if token missing.
         }
     }, [projectId, navigate]);
 

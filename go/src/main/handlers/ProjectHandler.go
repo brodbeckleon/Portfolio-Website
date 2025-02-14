@@ -79,7 +79,7 @@ func getProject(id uint) Project {
 
 	for _, project := range projects {
 		if project.ID == id {
-			log.Println("Project found", project)
+			log.Println("Project found", project.ProjectName)
 			return project
 		}
 	}

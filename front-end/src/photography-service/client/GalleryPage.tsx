@@ -10,15 +10,6 @@ interface Project {
     images: string[];
 }
 
-const socials = [
-    { name: 'Instagram', url: 'https://www.instagram.com/leon.brodbeck/' },
-    { name: 'YouTube', url: 'https://www.youtube.com/@leon.brodbeck' },
-];
-
-const links = [
-    { name: 'contact', url: '/contact' },
-];
-
 const GalleryPage: React.FC = () => {
     const { projectId } = useParams();
     const navigate = useNavigate();
@@ -175,7 +166,7 @@ const GalleryPage: React.FC = () => {
 
     return (
         <>
-            <Header title="Léon Brodbeck" socials={socials} links={links} />
+            <Header />
 
             <div className="gallery-container">
                 {!project ? (
